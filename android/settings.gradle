@@ -1,0 +1,3 @@
+rootProject.name = 'diary_rn'
+
+include ':app'
