@@ -30,16 +30,16 @@ let MCV = StyleSheet.create({
     longButton: {                  //定义一个比较长的Text做按钮
         height: textSize * 1.4,
         backgroundColor: 'gray',
-        width: textSize * 10,
-        borderRadius: 8,           //设置了圆角风络，在iPhone平台上显示正常，但在Android 
+        width: textSize * 8,
+        borderRadius: 4,           //设置了圆角风络，在iPhone平台上显示正常，但在Android 
         textAlign: 'center',       //手机上没有圆角风格，所以下面的Android手机运行截图
-        fontSize: textSize        //中的按钮都是直角的。在真正商用开发时，还是尽量让美工
+        fontSize: textSize,        //中的按钮都是直角的。在真正商用开发时，还是尽量让美工
     },                               //出图，用Image做按钮
     middleButton: {               //长度适中的Text按钮样式
         height: textSize * 1.4,
         backgroundColor: 'gray',
         width: textSize * 5,
-        borderRadius: 8,
+        borderRadius: 4,
         textAlign: 'center',
         fontSize: textSize
     },
@@ -55,13 +55,14 @@ let MCV = StyleSheet.create({
         width: totalWidth - 8,  //读者可以试一试看不设置这个width的效果，并且注意在阅读
         fontSize: textSize,   //日记和写日记界面中，日记显示（输入框）的左右两边能否与上面的边对齐
         backgroundColor: 'grey',
-        margin: 4
+        margin: 4,
+        textAlignVertical: 'top'
     },
     smallButton: {          //长度比较短的Text组件样式
         height: textSize * 1.4,
         backgroundColor: 'gray',
         width: textSize * 3,
-        borderRadius: 8,
+        borderRadius: 4,
         textAlign: 'center',
         fontSize: textSize
     },
