@@ -30,12 +30,12 @@ export default class DataHandler {
                         AsyncStorage.multiGet(Keys).then(
                             (results) => {
                                 let resultsLength = results.length;
-                                for(let counter = 0; counter<results.resultsLength; counter++) {
+                                for(let counter = 0; counter<results.length; counter++) {
                                     //取得数据并利用JSON类的parse方法生成对象，插入日记列表
                                     DataHandler.realDiaryList[counter] = JSON.parse(results[counter][1]);
                                 }
                                 // DataHandler.bubleSortDiaryList(); //日记列表排序
-                                if(resultsLength > 0) { //日记列表中有数据，取出最后一条数据
+                                if(DataHandler.realDiaryList.length > 0) { //日记列表中有数据，取出最后一条数据
                                     resultsLength--;
                                     DataHandler.listIndex = resultsLength;
                                     let newMoodIcon;
