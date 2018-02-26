@@ -10,34 +10,37 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import MCV from './MCV'
-let angryMood = require('./image/angry.png')
+import DataHandler from './DataHandler';
 
 export default class DiaryReader extends Component {
   render() {
-    return (
+  let isFirst = DataHandler.listIndex === 0 ? true: false;
+  let isLast = (DataHandler.listIndex + 1) === DataHandler.realDiaryList.length ? true : false;
+  let disableColor = '#C0C0C0';
+
+  return (
       <View style={MCV.container}>
         <StatusBar hidden={true}/>
         <View style={MCV.firstRow}>
-          <TouchableOpacity>
-            <Text style={MCV.middleButton} onPress={this.props.returnPressed}>
+          <TouchableOpacity onPress={this.props.returnPressed}>
+            <Text style={MCV.middleButton}>
               返回
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={MCV.middleButton} onPress={this.props.readingPreviousPressed}>
+          <TouchableOpacity onPress={this.props.readingPreviousPressed} disabled={isFirst ? true : false}>
+            <Text style={[MCV.middleButton, isFirst ? {backgroundColor: disableColor} : '']}>
               上一篇
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={MCV.middleButton} onPress={this.props.readingNextPressed}>
+          <TouchableOpacity onPress={this.props.readingNextPressed} disabled={isLast ? true : false}>
+            <Text style={[MCV.middleButton, isLast ? {backgroundColor: disableColor} : '']}>
               下一篇
             </Text>
           </TouchableOpacity>
         </View>
         <View style={MCV.secondRow}>
           <Image style={MCV.moodStyle} 
-            source={this.props.diaryMood}/> 
-            {/* 这里应该是变量，填入angryMood是为了测试界面 */}
+            source={this.props.diaryMood}/>
           <View style={MCV.subViewInReader}>
             <Text style={MCV.textInReader}>
               {this.props.diaryTitle}
