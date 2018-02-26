@@ -25,16 +25,7 @@ export default class Root extends Component {
             diaryTitle: Root.loading,
             diaryBody: Root.loading
         };
-        this.bindAllFunction();
-        // AsyncStorage.clear().then(
-        //     () => {
-        //         MyUtil.log("AsyncStorage.clear is OK!");
-        //     }
-        // ).catch(
-        //     (error) => {
-        //         MyUtil.log("AsyncStorage.clear is error: " + error);
-        //     }
-        // );
+        this.bindAllFunction();        
         DataHandler.getAllTheDiary().then(
             (result) => {
                 this.setState(result);
@@ -42,6 +33,20 @@ export default class Root extends Component {
         ).catch(
             (error) => {
                 MyUtil.log(error);
+            }
+        );
+
+        // this.clearData();
+    }
+    //for debug
+    clearData() {
+        AsyncStorage.clear().then(
+            () => {
+                MyUtil.log("AsyncStorage.clear is OK!");
+            }
+        ).catch(
+            (error) => {
+                MyUtil.log("AsyncStorage.clear is error: " + error);
             }
         );
     }
@@ -54,10 +59,16 @@ export default class Root extends Component {
         this.readingNextPressed = this.readingNextPressed.bind(this);
     }
     readingPreviousPressed() {
-
+        let previousDiary = DataHandler.getPreviousDiary();
+        if(previousDiary != null) {
+            this.setState(previousDiary);
+        }
     }
     readingNextPressed() {
-
+        let nextDiary = DataHandler.getNextDiary();
+        if(nextDiary != null) {
+            this.setState(nextDiary);
+        }
     }
     //阅读日记界面、写日记界面返回日记列表界面的处理函数
     returnPressed() {

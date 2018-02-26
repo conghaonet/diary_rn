@@ -8,10 +8,12 @@ import React, { Component } from 'react';
 import {
     Text, View, TextInput, TouchableOpacity, Image, StatusBar
 } from 'react-native';
+import PropTypes from 'prop-types';
 import MCV from './MCV'
 import MyUtil from './MyUtil';
 
 let angryMood = require('./image/angry.png');
+
 export default class DiaryList extends Component {
     constructor(props) {
         super(props);
@@ -67,4 +69,10 @@ export default class DiaryList extends Component {
             </View>
         );
     }
+}
+//添加属性确认
+DiaryList.propTypes = {
+    selectLististItem: PropTypes.func.isRequired,
+    searchKeyword: PropTypes.func.isRequired,
+    writeDiary: PropTypes.func.isRequired
 }

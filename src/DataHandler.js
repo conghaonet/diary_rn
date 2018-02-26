@@ -3,11 +3,11 @@ import {
 } from 'react-native';
 
 import MyUtil from './MyUtil'
-let angryMood = require('./image/angry.png');
-let peaceMood = require('./image/peace.png');
-let happyMood = require('./image/happy.png');
-let sadMood = require('./image/sad.png');
-let miseryMood = require('./image/misery.png');
+// let angryMood = require('./image/angry.png');
+// let peaceMood = require('./image/peace.png');
+// let happyMood = require('./image/happy.png');
+// let sadMood = require('./image/sad.png');
+// let miseryMood = require('./image/misery.png');
 
 export default class DataHandler {
     static realDiaryList =[];
@@ -38,31 +38,12 @@ export default class DataHandler {
                                 if(DataHandler.realDiaryList.length > 0) { //日记列表中有数据，取出最后一条数据
                                     resultsLength--;
                                     DataHandler.listIndex = resultsLength;
-                                    let newMoodIcon;
-                                    switch(DataHandler.realDiaryList[resultsLength].mood) {
-                                        case 2:
-                                            newMoodIcon = angryMood;
-                                            break;
-                                        case 3:
-                                            newMoodIcon = sadMood;
-                                            break;
-                                        case 4:
-                                            newMoodIcon = happyMood;
-                                            break;
-                                        case 5:
-                                            newMoodIcon = miseryMood;
-                                            break;
-                                        default:
-                                            newMoodIcon = peaceMood;
-                                    }
                                     let newTitle = DataHandler.realDiaryList[resultsLength].title;
                                     let newBody = DataHandler.realDiaryList[resultsLength].body;
                                     let ctime = new Date(DataHandler.realDiaryList[resultsLength].time);
-                                    let timeString = ''+ctime.getFullYear() + '年' + (ctime.getMonth() + 1) + '月' + ctime.getDate() + 
-                                                        '日 星期' + (ctime.getDay() + 1) + ' ' + ctime.getHours() + ':' + ctime.getMinutes();
                                     let rValue = {
-                                        diaryMood: newMoodIcon,
-                                        diaryTime: timeString,
+                                        diaryMood: DataHandler.getMoodImage(DataHandler.realDiaryList[resultsLength].mood),
+                                        diaryTime: DataHandler.formateTime2String(ctime),
                                         diaryTitle: newTitle,
                                         diaryBody: newBody,
                                     }
@@ -111,22 +92,43 @@ export default class DataHandler {
         // }
     }
     static getPreviousDiary() { //上一篇日记
-
+        if(DataHandler.listIndex === 0) return null;
+        DataHandler.listIndex--;
+        let resultsLength = DataHandler.listIndex;
+        let newTitle = DataHandler.realDiaryList[resultsLength].title;
+        let newBody = DataHandler.realDiaryList[resultsLength].body;
+        let ctime = new Date(DataHandler.realDiaryList[resultsLength].time);
+        return {
+            diaryMood: DataHandler.getMoodImage(DataHandler.realDiaryList[resultsLength].mood),
+            diaryTime: DataHandler.formateTime2String(ctime),
+            diaryTitle: newTitle,
+            diaryBody: newBody
+        }
     }
     static getNextDiary() { //下一篇日记
-
+        if(DataHandler.listIndex >= (DataHandler.realDiaryList.length -1) ) return null;
+        DataHandler.listIndex++;
+        let resultsLength = DataHandler.listIndex;
+        let newTitle = DataHandler.realDiaryList[resultsLength].title;
+        let newBody = DataHandler.realDiaryList[resultsLength].body;
+        let ctime = new Date(DataHandler.realDiaryList[resultsLength].time);
+        return {
+            diaryMood: DataHandler.getMoodImage(DataHandler.realDiaryList[resultsLength].mood),
+            diaryTime: DataHandler.formateTime2String(ctime),
+            diaryTitle: newTitle,
+            diaryBody: newBody
+        }
     }
     static saveDiary(newDiaryMood, newDiaryBody, newDiaryTitle) { //保存日记
         return new Promise(
             function(resolve, reject) {
+                //Date对应的日期格式：2018-02-26T10:20:44.245Z
                 let currentTime = new Date();
-                let timeString = ''+currentTime.getFullYear() + '年' + (currentTime.getMonth() + 1) + '月' + currentTime.getDate() + 
-                                    '日 星期' + (currentTime.getDay() + 1) + ' ' + currentTime.getHours() + ':' + currentTime.getMinutes();
                 let aDiary = Object();
                 aDiary.title = newDiaryTitle;
                 aDiary.body = newDiaryBody;
                 aDiary.mood = newDiaryMood;
-                aDiary.time = timeString;
+                aDiary.time = currentTime;
                 //sectionID用来对日记列表进行分段显示（见第8章）
                 aDiary.sectionID = ''+currentTime.getFullYear() + '年' + (currentTime.getMonth() + 1) + '月';
                 aDiary.index = Date.parse(currentTime);
@@ -135,28 +137,11 @@ export default class DataHandler {
                         let totalLength = DataHandler.realDiaryList.length;
                         DataHandler.realDiaryList[totalLength] = aDiary;
                         DataHandler.listIndex = totalLength;
-                        let newMoodIcon;
-                        switch(newDiaryMood) {
-                            case 2:
-                                newMoodIcon = angryMood;
-                                break;
-                            case 3:
-                                newMoodIcon = sadMood;
-                                break;
-                            case 4:
-                                newMoodIcon = happyMood;
-                                break;
-                            case 5:
-                                newMoodIcon = miseryMood;
-                                break;
-                            default:
-                                newMoodIcon = peaceMood;
-                        }
                         let aValue = {
                             uiCode: 1,
-                            diaryTime: timeString,
+                            diaryTime: DataHandler.formateTime2String(currentTime),
                             diaryTitle: newDiaryTitle,
-                            diaryMood: newMoodIcon,
+                            diaryMood: DataHandler.getMoodImage(newDiaryMood),
                             diaryBody: newDiaryBody
                         }
                         resolve(aValue); //返回新写的日记数据
@@ -168,5 +153,29 @@ export default class DataHandler {
                 );
             }
         );
+    }
+    static getMoodImage(moodCode) {
+        let mood;
+        switch(moodCode) {
+            case 2:
+                mood = require('./image/angry.png');
+                break;
+            case 3:
+                mood = require('./image/sad.png');
+                break;
+            case 4:
+                mood = require('./image/happy.png');
+                break;
+            case 5:
+             mood = require('./image/misery.png');
+                break;
+            default:
+                mood = require('./image/peace.png');
+        }
+        return mood;
+    }
+    static formateTime2String(diaryTime) {
+        return ''+diaryTime.getFullYear() + '年' + (diaryTime.getMonth() + 1) + '月' + diaryTime.getDate() + 
+        '日 星期' + diaryTime.getDay() + ' ' + diaryTime.getHours() + ':' + diaryTime.getMinutes();
     }
 }
